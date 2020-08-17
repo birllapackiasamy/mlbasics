@@ -3,9 +3,22 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'python --version'
                 sh './build/build.sh'
+            }
+        }
+        stage('Test'){
+            steps {
                 sh 'pytest'
+            }
+        }
+        stage('Approval') {
+            steps {
+                input "Shall the build be ${currentBuild.fullDisplayName} deployed to production?"
+            }
+        }
+        stage('Production') {
+            steps{
+                echo 'Final step of the pipeline'
             }
         }
     }
